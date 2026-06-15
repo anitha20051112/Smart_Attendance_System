@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Face Recognition Attendance</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --text-light: #2c3e50;
+            --text-dark: #f5f5f5;
+            --card-light: rgba(255, 255, 255, 0.2);
+            --card-dark: rgba(33, 33, 33, 0.7);
+            --btn-dark: #34495e;
+            --btn-dark-hover: #2c3e50;
+        }
+
+        /* 🌸 Pastel Animated Gradient Background */
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(270deg, #a8edea, #fed6e3, #fbc2eb, #d4fc79, #c9ffbf);
+            background-size: 1000% 1000%;
+            animation: gradientBG 25s ease infinite;
+            height: 100vh;
+            color: var(--text-light);
+            transition: all 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        body.dark-mode {
+            background: linear-gradient(-45deg, #2c3e50, #34495e, #1c1c1c, #000000);
+            color: var(--text-dark);
+        }
+
+        .content-box {
+            background: var(--card-light);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-radius: 20px;
+            padding: 50px;
+            max-width: 1200px;
+            width: 90%;
+            display: flex;
+            flex-wrap: wrap;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.5s ease;
+        }
+
+        body.dark-mode .content-box {
+            background: var(--card-dark);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.6);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .left-side {
+            flex: 1 1 500px;
+            padding: 20px;
+        }
+
+        .left-side h1 {
+            font-size: 2.8rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .left-side p {
+            font-size: 1.1rem;
+            margin-bottom: 25px;
+        }
+
+        .left-side input {
+            width: 100%;
+            max-width: 320px;
+            border-radius: 12px;
+            padding: 12px 15px;
+            margin-bottom: 25px;
+            border: none;
+            outline: none;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .btn-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+        }
+
+        .btn-glow {
+            padding: 14px;
+            font-size: 16px;
+            border: none;
+            border-radius: 12px;
+            background: var(--btn-dark);
+            color: white;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(52, 73, 94, 0.6);
+            text-decoration: none !important;
+            text-align: center;
+            display: inline-block;
+        }
+
+        .btn-glow:hover {
+            background: var(--btn-dark-hover);
+            box-shadow: 0 6px 25px rgba(44, 62, 80, 0.7);
+            transform: translateY(-2px);
+        }
+
+        body.dark-mode .btn-glow {
+            background: #555;
+            box-shadow: 0 4px 15px rgba(200, 200, 200, 0.4);
+        }
+
+        .btn-toggle {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            background: #333;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 50px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            z-index: 999;
+        }
+
+        .btn-toggle:hover {
+            background: #555;
+        }
+
+        .right-side {
+            flex: 1 1 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .right-side img {
+            width: 100%;
+            max-width: 400px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        #intro-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #000;
+            color: #fff;
+            font-size: 3rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 1s ease-out;
+        }
+
+        @media (max-width: 768px) {
+            .content-box {
+                flex-direction: column;
+                padding: 30px 20px;
+            }
+
+            .left-side {
+                text-align: center;
+            }
+
+            .btn-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .right-side img {
+                max-width: 300px;
+                margin-top: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Intro animation -->
+<div id="intro-screen">ATTENDANCE</div>
+
+<!-- Dark mode toggle -->
+<button class="btn-toggle" onclick="toggleDarkMode()">🌙 Toggle Mode</button>
+
+<!-- Dashboard content -->
+<div class="content-box">
+    <div class="left-side">
+        <h1>Attendance - Face Recognition</h1>
+        <p>Capture, Train, Recognize & Track Attendance Instantly</p>
+
+        <form method="POST" action="/capture">
+            <input type="text" name="student_id" placeholder="Enter Student ID" required>
+
+            <div class="btn-grid mt-3">
+                <button type="submit" class="btn-glow">📷 Capture Faces</button>
+                <a href="/train" class="btn-glow">💾 Train Model</a>
+                <a href="/recognize" class="btn-glow">🎯 Recognize & Mark</a>
+                <a href="/attendance" class="btn-glow">📄 View Attendance</a>
+                <a href="/view_database" class="btn-glow">📚 View Database</a>
+                <a href="/analytics" class="btn-glow">📊 View Graph</a>
+            </div>
+        </form>
+    </div>
+
+    <div class="right-side">
+        <img src="/static/face_scan.jpeg" alt="Face Recognition Image">
+    </div>
+</div>
+
+<!-- Training Done Modal -->
+<div class="modal fade" id="trainModal" tabindex="-1" aria-labelledby="trainModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-success text-white">
+        <h5 class="modal-title" id="trainModalLabel">Success</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        ✅ Model trained successfully!
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" data-bs-dismiss="modal">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    function toggleDarkMode() {
+        document.body.classList.toggle("dark-mode");
+    }
+
+    // Show ATTND intro only once per session
+    window.addEventListener("DOMContentLoaded", () => {
+        const intro = document.getElementById("intro-screen");
+        if (sessionStorage.getItem("introShown")) {
+            intro.style.display = "none";
+        } else {
+            sessionStorage.setItem("introShown", "true");
+            setTimeout(() => {
+                intro.style.opacity = "0";
+                intro.style.pointerEvents = "none";
+            }, 1500);
+            setTimeout(() => {
+                intro.style.display = "none";
+            }, 2000);
+        }
+    });
+
+    // Show training modal if backend sends show_modal flag
+    {% if show_modal %}
+    const trainModal = new bootstrap.Modal(document.getElementById('trainModal'));
+    trainModal.show();
+    {% endif %}
+</script>
+
+</body>
+</html>
